@@ -39,19 +39,35 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
   }
   else {
     $inactive_objects = islandora_simple_workflow_get_inactive_objects();
-    $rows = array();
+    islandora_simple_workflow_get_inactive_object_parents($inactive_objects);
+
+    $options = array();
+
     foreach ($inactive_objects as $inactive_object) {
-      $pid = $inactive_object['object']['value'];
-      $rows[$pid] = array(l($inactive_object['title']['value'] . " (" . $pid . ")", "islandora/object/$pid"));
+      $object_pid = $inactive_object['object']['value'];
+      $parent_pid = (isset($inactive_object['parent']['parent'])) ? $inactive_object['parent']['parent'] : array();
+      $options[$object_pid]['object'] = l($inactive_object['title']['value'] . " (" . $object_pid . ")", "islandora/object/$object_pid");
+      if (isset($inactive_object['parent']['parent'])) {
+        $parent_pid = $inactive_object['parent']['parent'];
+        $options[$object_pid]['collection'] = l($parent_pid, "islandora/object/$parent_pid");
+      }
+      else {
+        $options[$object_pid]['collection'] = NULL;
+      }
     }
+
+    $header = array(
+      'object' => t('Object'),
+      'collection' => t('Parent'),
+    );
     $form['management_table'] = array(
       '#type' => 'tableselect',
-      '#header' => array(t('Object')),
-      '#options' => $rows,
+      '#header' => $header,
+      '#options' => $options,
       '#attributes' => array(),
       '#empty' => t('No inactive objects were found.'),
     );
-    if (!empty($rows)) {
+    if (!empty($options)) {
       $form['submit_selected'] = array(
         '#type' => 'submit',
         '#name' => 'islandora-simple-workflow-submit-selected',
