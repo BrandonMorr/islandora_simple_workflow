@@ -16,7 +16,7 @@
 function islandora_simple_workflow_admin_form(array $form, array &$form_state) {
   $form['islandora_simple_workflow_toggle_parent_column'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Toggle Parent Column in Inactive Object table'),
+    '#title' => t('Enable Parent column in Inactive Object table'),
     '#default_value' => variable_get('islandora_simple_workflow_toggle_parent_column', FALSE),
   );
 
