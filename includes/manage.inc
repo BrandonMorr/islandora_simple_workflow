@@ -38,36 +38,40 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
     );
   }
   else {
+    $render_parents = variable_get('islandora_simple_workflow_toggle_parent_column', 0);
     $inactive_objects = islandora_simple_workflow_get_inactive_objects();
-    islandora_simple_workflow_get_inactive_object_parents($inactive_objects);
 
-    $options = array();
+    if ($render_parents) {
+      islandora_simple_workflow_get_inactive_object_parents($inactive_objects);
+    }
+
+    $rows = array();
 
     foreach ($inactive_objects as $inactive_object) {
       $object_pid = $inactive_object['object']['value'];
-      $parent_pid = (isset($inactive_object['parent']['parent'])) ? $inactive_object['parent']['parent'] : array();
-      $options[$object_pid]['object'] = l($inactive_object['title']['value'] . " (" . $object_pid . ")", "islandora/object/$object_pid");
-      if (isset($inactive_object['parent']['parent'])) {
+      $rows[$object_pid][] = l($inactive_object['title']['value'] . " (" . $object_pid . ")", "islandora/object/$object_pid");
+
+      if (!empty($inactive_object['parent']['parent'])) {
         $parent_pid = $inactive_object['parent']['parent'];
-        $options[$object_pid]['collection'] = l($parent_pid, "islandora/object/$parent_pid");
+        $rows[$object_pid][] = l($parent_pid, "islandora/object/$parent_pid");
       }
       else {
-        $options[$object_pid]['collection'] = NULL;
+        $rows[$object_pid][] = NULL;
       }
     }
 
     $header = array(
-      'object' => t('Object'),
-      'collection' => t('Parent'),
+      t('Object'),
+      ($render_parents) ? t('Parent') : NULL,
     );
     $form['management_table'] = array(
       '#type' => 'tableselect',
       '#header' => $header,
-      '#options' => $options,
+      '#options' => $rows,
       '#attributes' => array(),
       '#empty' => t('No inactive objects were found.'),
     );
-    if (!empty($options)) {
+    if (!empty($rows)) {
       $form['submit_selected'] = array(
         '#type' => 'submit',
         '#name' => 'islandora-simple-workflow-submit-selected',
