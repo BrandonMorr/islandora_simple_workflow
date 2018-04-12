@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Admin form.
+ */
+
+/**
+ * Admin settings form for Islandora Simple Workflow configuration.
+ *
+ * @param array $form
+ *   An array representing a form within Drupal.
+ * @param array $form_state
+ *   An array containing the Drupal form state.
+ */
+function islandora_simple_workflow_admin_form(array $form, array &$form_state) {
+  $form['islandora_simple_workflow_toggle_parent_column'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Parent column in Inactive Object table'),
+    '#default_value' => variable_get('islandora_simple_workflow_toggle_parent_column', FALSE),
+  );
+
+  return system_settings_form($form);
+}
