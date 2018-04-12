@@ -53,8 +53,8 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
       $rows[$object_pid][] = l($inactive_object['title']['value'] . " (" . $object_pid . ")", "islandora/object/$object_pid");
 
       if ($render_parents) {
-        if (!empty($inactive_object['parent']['parent'])) {
-          $parent_pid = $inactive_object['parent']['parent'];
+        if (!empty($inactive_object['parent']['value'])) {
+          $parent_pid = $inactive_object['parent']['value'];
           $rows[$object_pid][] = l($parent_pid, "islandora/object/$parent_pid");
         }
         else {
