@@ -12,8 +12,8 @@ function islandora_simple_workflow_menu() {
   return array(
     'admin/islandora/tools/simple_workflow' => array(
       'title' => 'Simple Workflow',
-      'description' => 'Manage inactive objects.',
       'type' => MENU_NORMAL_ITEM,
+      'description' => 'Manage inactive objects.',
       'access arguments' => array('administer site configuration'),
     ),
     'admin/islandora/tools/simple_workflow/list' => array(
