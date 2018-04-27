@@ -39,12 +39,8 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
     );
   }
   else {
-    $render_parents = variable_get('islandora_simple_workflow_toggle_parent_column', 0);
+    $render_parents = variable_get('islandora_simple_workflow_toggle_parent_column', FALSE);
     $inactive_objects = islandora_simple_workflow_get_inactive_objects();
-
-    if ($render_parents) {
-      islandora_simple_workflow_get_inactive_object_parents($inactive_objects);
-    }
 
     $rows = array();
 

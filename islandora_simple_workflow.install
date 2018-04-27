@@ -11,16 +11,3 @@
 function islandora_simple_workflow_uninstall() {
   variable_del('islandora_simple_workflow_toggle_parent_column');
 }
-
-/**
- * Remove existing link path to ensure Menu will properly rebuild.
- *
- * XXX: Calling menu_rebuild() didn't quite do the trick as the menu items
- * were not rebuilding properly, removing the menu link fixes this issue.
- */
-function islandora_simple_workflow_update_7000(array &$sandbox) {
-  db_delete('menu_links')
-    ->condition('link_path', 'admin/islandora/tools/simple_workflow/list')
-    ->execute();
-  menu_rebuild();
-}
