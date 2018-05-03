@@ -51,5 +51,15 @@ EOQ;
   ));
   $results = $connection->repository->ri->sparqlQuery($sparql_query);
 
+  foreach ($results as &$object) {
+    if (isset($object['parent']['value'])) {
+      $parent = islandora_object_load($object['parent']['value']);
+
+      if (!$parent || !islandora_object_access(ISLANDORA_VIEW_OBJECTS, $parent)) {
+        unset($object['parent']);
+      }
+    }
+  }
+
   return $results;
 }
