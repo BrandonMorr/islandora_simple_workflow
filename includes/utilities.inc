@@ -8,11 +8,13 @@
 /**
  * Query for inactive objects.
  *
+ * @param bool $query_parent
+ *   Indicates whether to query parent infomation.
+ *
  * @return array
  *   An array containing the results of the inactive objects query.
  */
-function islandora_simple_workflow_get_inactive_objects() {
-  $query_parent = variable_get('islandora_simple_workflow_toggle_parent_column', FALSE);
+function islandora_simple_workflow_get_inactive_objects($query_parent = FALSE) {
   $connection = islandora_get_tuque_connection();
   $query = <<<EOQ
 SELECT ?object ?title !parent FROM <#ri> WHERE

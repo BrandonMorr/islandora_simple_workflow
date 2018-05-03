@@ -40,7 +40,7 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
   }
   else {
     $render_parents = variable_get('islandora_simple_workflow_toggle_parent_column', FALSE);
-    $inactive_objects = islandora_simple_workflow_get_inactive_objects();
+    $inactive_objects = islandora_simple_workflow_get_inactive_objects($render_parents);
 
     $rows = array();
 
