@@ -68,7 +68,7 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
     );
 
     if ($render_parents) {
-      array_push($header, t('Parents'));
+      $header[] = t('Parents');
     }
 
     $form['management_table'] = array(
