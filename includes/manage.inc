@@ -63,16 +63,17 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
       }
     }
 
+    $header = array(
+      t('Object'),
+    );
+
     if ($render_parents) {
-      $header = array(
-        t('Object'),
-        t('Parent'),
-      );
+      array_push($header, t('Parents'));
     }
 
     $form['management_table'] = array(
       '#type' => 'tableselect',
-      '#header' => ($render_parents) ? $header : array(t('Object')),
+      '#header' => $header,
       '#options' => $rows,
       '#attributes' => array(),
       '#empty' => t('No inactive objects were found.'),
