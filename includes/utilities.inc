@@ -51,14 +51,31 @@ EOQ;
   ));
   $results = $connection->repository->ri->sparqlQuery($sparql_query);
 
-  foreach ($results as &$object) {
-    if (isset($object['parent']['value'])) {
-      $parent = islandora_object_load($object['parent']['value']);
+  if ($query_parent) {
+    // Check access for each parent object, unset if conditions are not met.
+    foreach ($results as &$object) {
+      if (isset($object['parent']['value'])) {
+        $parent = islandora_object_load($object['parent']['value']);
 
-      if (!$parent || !islandora_object_access(ISLANDORA_VIEW_OBJECTS, $parent)) {
-        unset($object['parent']);
+        if (!$parent || !islandora_object_access(ISLANDORA_VIEW_OBJECTS, $parent)) {
+          unset($object['parent']);
+        }
       }
     }
+
+    // Check for multiple parents, merge parents into one child array.
+    $parsed_results = array();
+
+    foreach ($results as $result) {
+      if (!isset($parsed_results[$result['object']['value']])) {
+        $parsed_results[$result['object']['value']] = array();
+      }
+      $parsed_results[$result['object']['value']]['object'] = $result['object'];
+      $parsed_results[$result['object']['value']]['title'] = $result['title'];
+      $parsed_results[$result['object']['value']]['parent'][] = $result['parent'];
+    }
+
+    return $parsed_results;
   }
 
   return $results;
