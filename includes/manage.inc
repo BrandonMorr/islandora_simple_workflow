@@ -66,8 +66,6 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
 
         $rows[$object_pid][] = implode(', ', $inactive_object['parents']);
       }
-
-      dpm($inactive_object);
     }
 
     $header = array(
