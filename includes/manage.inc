@@ -18,6 +18,7 @@
  */
 function islandora_simple_workflow_manage_form($form, $form_state) {
   module_load_include('inc', 'islandora_simple_workflow', 'includes/utilities');
+  module_load_include('inc', 'islandora', 'includes/utilities');
 
   if (isset($form_state['show_confirm'])) {
     $form['confirm_message'] = array(
@@ -50,17 +51,13 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
 
       if ($render_parents) {
         $object = islandora_object_load($object_pid);
-        $parents = islandora_get_parents_from_rels_ext($object);
 
-        $inactive_object['parents'] = array();
+        if ($object) {
+          $parents = islandora_get_parents_from_rels_ext($object);
+          $inactive_object['parents'] = array();
 
-        foreach ($parents as $parent) {
-          if (is_object($parent)) {
-            $parent_pid = $parent->id;
-
-            if (!empty($parent_pid)) {
-              $inactive_object['parents'][] = l($parent_pid, "islandora/object/$parent_pid");
-            }
+          foreach ($parents as $parent) {
+            $inactive_object['parents'][] = l($parent->id, "islandora/object/$parent->id");
           }
         }
 
