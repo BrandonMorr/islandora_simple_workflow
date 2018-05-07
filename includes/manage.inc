@@ -40,7 +40,7 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
   }
   else {
     $render_parents = variable_get('islandora_simple_workflow_toggle_parent_column', FALSE);
-    $inactive_objects = islandora_simple_workflow_get_inactive_objects($render_parents);
+    $inactive_objects = islandora_simple_workflow_get_inactive_objects();
 
     $rows = array();
 
@@ -49,18 +49,25 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
       $rows[$object_pid][] = l($inactive_object['title']['value'] . " (" . $object_pid . ")", "islandora/object/$object_pid");
 
       if ($render_parents) {
-        $parents[$object_pid] = array();
+        $object = islandora_object_load($object_pid);
+        $parents = islandora_get_parents_from_rels_ext($object);
 
-        foreach ($inactive_object['parent'] as $parent) {
-          $parent_pid = $parent['value'];
+        $inactive_object['parents'] = array();
 
-          if (!empty($parent_pid)) {
-            $parents[$object_pid][] = l($parent_pid, "islandora/object/$parent_pid");
+        foreach ($parents as $parent) {
+          if (is_object($parent)) {
+            $parent_pid = $parent->id;
+
+            if (!empty($parent_pid)) {
+              $inactive_object['parents'][] = l($parent_pid, "islandora/object/$parent_pid");
+            }
           }
         }
 
-        $rows[$object_pid][] = implode(', ', $parents[$object_pid]);
+        $rows[$object_pid][] = implode(', ', $inactive_object['parents']);
       }
+
+      dpm($inactive_object);
     }
 
     $header = array(
