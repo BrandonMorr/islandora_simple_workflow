@@ -59,9 +59,9 @@ function islandora_simple_workflow_manage_form($form, $form_state) {
           foreach ($parents as $parent) {
             $inactive_object['parents'][] = l($parent->id, "islandora/object/$parent->id");
           }
-        }
 
-        $rows[$object_pid][] = implode(', ', $inactive_object['parents']);
+          $rows[$object_pid][] = implode(', ', $inactive_object['parents']);
+        }
       }
     }
 
